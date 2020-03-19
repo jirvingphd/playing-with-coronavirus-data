@@ -123,3 +123,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+CORD-19-research-challenge.zip
