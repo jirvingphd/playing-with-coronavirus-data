@@ -92,6 +92,7 @@ def update_output_div(states,cases,new_only):
     pfig = plot_states(df,states,plot_cols=cases,new_only=new_only)
     return pfig
 
-app.run_server(debug=True)
+if __name__=='main':
+    app.run_server(debug=False)
 
 # FLASK_APP=app
