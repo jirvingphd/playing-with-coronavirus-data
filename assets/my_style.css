@@ -4,7 +4,9 @@
     background-color: black;
     color:white;
 }
-
+#dash-app-content{
+    background-color: black;
+}
 #app{
     font-weight:70%;
     border:2px solid lightskyblue;

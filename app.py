@@ -6,6 +6,16 @@
 #     from jupyter_dash import JupyterDash
     
 from functions import *
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.io as pio
+pio.templates.default = "plotly_dark"
+
+import cufflinks as cf
+cf.go_offline()
+cf.set_config_file(sharing='public',theme='solar',offline=True)
+
+
 corona_data = CoronaData(verbose=False,run_workflow=True)
 df = corona_data.df_us.copy()
 
