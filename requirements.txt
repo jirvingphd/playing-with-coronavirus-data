@@ -1,0 +1,6 @@
+fsds
+requests
+psycopg2-binary
+django
+gunicorn
+django-heroku

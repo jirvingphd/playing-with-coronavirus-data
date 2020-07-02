@@ -41,6 +41,7 @@ new_options = [{'label':'New Cases Only','value':1},
 # Build App
 # app = JupyterDash()
 app = dash.Dash()
+server = app.server
 
 app.layout = html.Div([
     html.H1("Coronavirus Analysis"),

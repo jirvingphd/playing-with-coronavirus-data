@@ -1,3 +1,11 @@
+## Copying Heroku
+venv
+*.pyc
+staticfiles
+.env
+db.sqlite3
+getting-started/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
