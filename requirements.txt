@@ -1,4 +1,6 @@
 fsds
+urllib3>=1.21.1
+
 requests
 psycopg2-binary
 django
@@ -8,4 +10,3 @@ dash
 plotly
 cufflinks
 kaggle
-
