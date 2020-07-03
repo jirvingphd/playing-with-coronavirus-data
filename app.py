@@ -24,10 +24,9 @@ from dash.dependencies import Input, Output
 
 
 ## Load Functions and Data
-from functions import *
+from functions import CoronaData,plot_states,get_state_ts
 
 corona_data = CoronaData(verbose=False,run_workflow=True)
-
 df = corona_data.df_us.copy()
 
 

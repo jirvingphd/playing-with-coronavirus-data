@@ -13,6 +13,14 @@ cf.go_offline()
 cf.set_config_file(sharing='public',theme='solar',offline=True)
 
 
+
+def make_options(menu_choices):
+    """Returns list of dictionary with {'label':menu_choice,'value':menu_choice}"""
+    options = []
+    for choice in menu_choices:
+        options.append({'label':choice,'value':choice})
+    return options
+
 # @add_method(CoronaData)
 def download_coronavirus_data(path='New Data/',verbose=False):
     """Installs the Kaggle Command Line Interface to clone dataset.
@@ -63,10 +71,10 @@ def download_coronavirus_data(path='New Data/',verbose=False):
     return main_file[0] #file_list[index]
 
 
+import pandas as pd
 
 #Make a base class
 class BaselineData(object):
-    import pandas as pd
     _df = pd.DataFrame()
 
     @property
@@ -88,6 +96,7 @@ class BaselineData(object):
                      ts_col=None,df=None,
                      freq='D', agg_func='sum'):
         """Take df_us and extracts state's data as then Freq/Aggregation provided"""
+        from IPython.display import display
         ## 
         if df is None:
             df = self._df.copy()
@@ -180,292 +189,6 @@ class BaselineData(object):
         return self._self_report()      
     
     
-    
-# class CoronaData(BaselineData):
-
-#     def __init__(self,data_dir='New Data/',run_workflow=True,
-#                  download=True,verbose=True):
-        
-#         ## Save params for later
-#         self.__download = download
-#         self.__verbose = verbose
-#         self._data_folder = data_dir
-        
-#         ## Download data or set local filepath
-#         if download:
-# #             print("[i] DOWNLOADING DATA FROM KAGGLE:")
-#             self.download_coronavirus_data(verbose=verbose)
-            
-#         else:
-#             self.get_data_fpath(data_dir)
-        
-        
-        
-#         ## Load df_raw and df
-#         self.load_raw_df(verbose=verbose)
-        
-#         ## Prepare State Data
-#         if run_workflow:
-#             self.get_and_clean_US()
-#             self._make_state_dict()
-# #             print('\n[!] Full Worfklow Complete:')
-# #             print('\tself.STATES, self.df_us created.')
-            
-
-#     # @add_method(CoronaData)
-#     def download_coronavirus_data(self,path=None,verbose=None):
-#         """Installs the Kaggle Command Line Interface to clone dataset.
-#         Then extracts dataset to specified path and displays name of main file.
-#         Args:
-#             path(str): Folder to extract dataset into (must end with a '/')
-
-#         Returns:
-#             file_list(list): List of full filepaths to downloaded csv files.
-#         """        
-#         if verbose==None:
-#             verbose = self.__verbose
-            
-#         if verbose:
-#             print('[i] DOWNLOADING DATA USING KAGGLE API')
-#             print("\thttps://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset")
-
-#         if path is None:
-#             path = self._data_folder
-                                  
-#         ## Determine if dataset is downloaded via Kaggle CL
-#         import os,glob
-#         from zipfile import ZipFile
-#         from IPython.display import clear_output
-#         os.makedirs(path, exist_ok=True)
-
-#         try:
-#             import kaggle
-#         except:
-#             ## Install Kaggle 
-#             !pip install kaggle --upgrade
-#             clear_output()
-#             if verbose: print('\t- Installed kaggle command line tool.')
-
-#         ## Run Kaggle Command 
-#         cmd = 'kaggle datasets download -d sudalairajkumar/novel-corona-virus-2019-dataset'
-#         os.system(cmd)
-
-#         ## Extract ZipFile
-#         zip_filepath = 'novel-corona-virus-2019-dataset.zip'
-#         with ZipFile(zip_filepath) as file:
-#             file.extractall(path)
-            
-#         if self.__verbose:
-#             print(f'\t- Downloaded dataset .zip and extracted to:"{path}"')
-     
-#         ## Delete Zip File
-#         os.system(f"rm {zip_filepath}"  )
-            
-#         self.get_data_fpath(path)
-
-        
-#     def get_data_fpath(self,path):
-#         """save self._file_list and self._main_file"""
-#         import glob
-#         verbose = self.__verbose
-#         ## Get list of all csvs
-#         if verbose: print('\t- Extraction Complete.')    
-#         file_list = glob.glob(path+"*.csv")
-
-#         ## Find main df 
-#         main_file = [file for file in file_list if 'covid_19_data.csv' in file]
-# #         if verbose: print(f"- The main file name is {main_file}")
-#         self._file_list = file_list
-#         self._main_file = main_file[0]
-    
-    
-    
-#     def load_raw_df(self,fpath=None,kws={},verbose=True):
-#         """Performs most basic of preprocessing, including renaming date column to 
-#         Date and dropping 'Last Update', and 'SNo' columns"""
-#         import pandas as pd
-#         if fpath is None:
-#             fpath = self._main_file
-
-#         ## Default Kws
-#         read_kws = dict(parse_dates=['ObservationDate','Last Update'])
-
-#         ## Add User kws
-#         read_kws = {**read_kws,**kws}
-
-# #         if sverbose:
-# #             print(f"[i] Loading {fpath} with read_csv kws:",end='')
-# #             display(read_kws)
-
-#         ## Read in csv and save as self.df_raw
-#         df = pd.read_csv(fpath,**read_kws)
-#         self.df_raw = df.copy()
-#         ## Drop unwated columns
-#         df.drop(['Last Update',
-#                  'SNo'],axis=1,inplace=True)
-        
-
-#         ## Rename Date columns
-#         df.rename({'ObservationDate':'Date'},axis=1,inplace=True)
-
-#         ## Display some info 
-#         if verbose:
-#             display(df.head())
-#             # Countries in the dataset
-#             print(f"[i] There are "+str(len(df['Country/Region'].unique()))+" countries in the datatset")
-
-#             ## Get first and last date
-#             start_ts = df["Date"].loc[df['Date'].idxmin()].strftime('%m-%d-%Y')
-#             end_ts = df["Date"].loc[df['Date'].idxmax()].strftime('%m-%d-%Y')
-#             # DF['Date'].idxmin(), DF['Date'].idxmax()
-#             print(f"[i] Dates Covered:\n\tFrom {start_ts} to {end_ts}")
-
-#         self._df = df.copy()#self.set_datetime_index(df)
-        
-        
-        
-    
-#     def set_datetime_index(self,df_=None,col='Date'):#,drop_old=False):
-#         """Returns df with specified column as datetime index"""
-#         import pandas as pd
-
-#         ## Grab df from self if None
-#         if df_ is None:
-#             df_ = self.df
-            
-#         ## Copy to avoid edits to orig
-#         df = df_.copy()
-        
-#         ## Convert to date time
-#         df[col] = pd.to_datetime(df[col],infer_datetime_format=True)
-        
-#         ## Set as index
-#         df.set_index(df[col],drop=True,inplace=True)
-        
-#         # Drop the column if it is present
-#         if col in df.columns:
-#             df.drop(columns=col,inplace=True)
-            
-#         return df
-    
-    
-    
-#     def load_us_reference_info(self):
-#         """Return and save US Reference Data"""
-#         ## Making Master Lookup CSV
-#         import pandas as pd
-#         abbrev = pd.read_csv('Reference Data/united_states_abbreviations.csv')
-#         pop = pd.read_csv('Reference Data/us-pop-est2019-alldata.csv')
-#         us_pop = pop.loc[pop['STATE']>0][['NAME','POPESTIMATE2019']].copy()
-#         us_info = pd.merge(abbrev,us_pop,right_on='NAME',left_on='State',how="inner")
-#         us_info.drop('NAME',axis=1,inplace=True)
-#         self.reference_data = us_info
-#         return us_info
-    
-    
-#     def calculate_per_capita(self,df_=None,stat_cols = ['Confirmed','Deaths','Recovered']):
-#         """Calculate Per Capita columns"""
-#         if df_ is None:
-#             df_ = self.df
-            
-#         df = df_.copy()
-        
-#         if 'POPESTIMATE2019' in df.columns==False:
-#             self.load_us_reference_info()
-            
-#         ## ADDING PER CAPITA DATA 
-#         for col in stat_cols:
-#             df[f"{col} Per Capita"] = df[col]/df['POPESTIMATE2019']
-#         df.drop('POPESTIMATE2019',axis=1,inplace=True)
-#         return df    
-
-    
-    
-#     def get_and_clean_US(self,df=None,#save_as = 'Reference Data/united_states_abbreviations.csv',
-#                          make_date_index=True,per_capita=True):
-#         """Takes raw df loaded and extracts United States and processes
-#         all state names to create new abbreviation column 'state'.
-#         """
-#         import pandas as pd
-#         if df is None:
-#             df= self._df.copy()
-            
-#         ## Get only US
-#         df_us = df.groupby('Country/Region').get_group('US').copy() 
-#         state_lookup = self.load_us_reference_info()
-
-
-#         ## Make renaming dict for states
-#         STATE_DICT = dict(zip(state_lookup['State'],state_lookup['Abbreviation']))
-#         STATE_DICT.update({'Chicago':'IL',
-#                           'Puerto Rico':'PR',
-#                           'Virgin Islands':'VI',
-#                           'United States Virgin Islands':'VI'})
-
-#         ## Separately Process Rows that contain a city, state 
-#         df_city_states = df_us[df_us['Province/State'].str.contains(',')]
-
-
-#         ## Finding City Abbreviations in city_states
-#         import re
-#         state_expr = re.compile(r"[A-Z\.]{2,4}")
-#         df_city_states['state'] = df_city_states['Province/State'].apply(state_expr.findall)
-#         df_city_states = df_city_states.explode('state')
-
-
-#         ## Seperately process Rows that do not contain a city,state
-#         df_states = df_us[~df_us['Province/State'].str.contains(',')]
-#         df_states['state'] =  df_states['Province/State'].map(STATE_DICT)
-
-#         ## Combining data frame back together
-#         df = pd.concat([df_states,df_city_states]).sort_index()
-# #         df = df.dropna(subset=['state'])
-
-#         ## Fix some stragglers (like D.C. vs DC)
-#         df['state'] = df['state'].replace('D.C.','DC')
-        
-#         ## Combine Cleaned Data 
-#         df = pd.merge(df, state_lookup,left_on='state',right_on="Abbreviation")
-        
-#         df.rename({'State':'State Name'},inplace=True,axis=1)
-#         df.drop(columns=['Abbreviation','State Name'],inplace =True)
-        
-    
-#         ## Add Population Data
-#         if per_capita:
-
-#             for col in  ['Confirmed','Deaths','Recovered']:
-#                 df[f"{col} Per Capita"] = df[col]/df['POPESTIMATE2019']
-
-#             ## Remove Population 
-#             df.drop('POPESTIMATE2019',axis=1,inplace=True)
-
-#         if make_date_index:
-#             df = self.set_datetime_index(df)
-        
-# #         df.drop(columns=['Province/State'],inplace=True)
-
-#         self.df_us = df.copy()
-# #         self.US = df.copy()
-#         return df
-    
-    
-#     def _make_state_dict(self,df=None,col='state'):
-#         if df is None:
-#             df = self.df_us.copy()
-            
-#         elif col not in df.columns:
-#             msg = f"{col} not in df.columns.\nColumns include:"+'\n'.join(df.columns)
-#             raise Exception(msg)
-            
-#         state_list=df[col].unique()
-
-#         STATES = {}
-#         for state in state_list:
-#             STATES[state] = self.get_group_ts(state,df=df)
-#         self.STATES = STATES
-
-        
         
         
 def get_state_ts(df, state_name,
@@ -592,8 +315,9 @@ def plot_states(df, state_list, plot_cols = ['Confirmed'],df_only=False,
         
         if show:
             pfig.show()
-            
+                
         return pfig
+    
     else:
         return plot_df#.reset_index()
     
@@ -634,7 +358,7 @@ class CoronaData(BaselineData):
         
         
         
-        ## Load df_raw and df
+        ## Load raw_df and df
         self.load_raw_df(verbose=verbose)
         
         ## Prepare State Data
@@ -731,9 +455,9 @@ class CoronaData(BaselineData):
 #             print(f"[i] Loading {fpath} with read_csv kws:",end='')
 #             display(read_kws)
 
-        ## Read in csv and save as self.df_raw
+        ## Read in csv and save as self.raw_df
         df = pd.read_csv(fpath,**read_kws)
-        self.df_raw = df.copy()
+        self.raw_df = df.copy()
         ## Drop unwated columns
         df.drop(['Last Update',
                  'SNo'],axis=1,inplace=True)
@@ -906,7 +630,7 @@ class CovidTrackingProject(BaselineData):
 
     
     def __init__(self,base_folder="New Data/",
-                 download=True,verbose=True,df='states'):
+                 download=True,verbose=True,df_type='states'):
         self.base_folder = base_folder
         self.__verbose = verbose
         
@@ -930,14 +654,17 @@ class CovidTrackingProject(BaselineData):
             raise Exception("Non-download loading not implemented yet.")
         
         ## Set .df attribute
-        if df.lower()=='states':
-            self._df_type = df
-            self._df = self.STATES[self.columns['good']].copy()
-        elif df.lower()=='us':
-            self._df = self.US.copy()
+        if df_type.lower()=='states':
+            self._df_type = df_type
+            self._df = self._data[df_type].copy()#self.STATES[self.columns['good']].copy()
+            
+        elif df_type.lower()=='us':
+            self._df_type = df_type
+            self._df = self._data[df_type].copy()
+
 
     base_url = f"http://covidtracking.com"
-    data = dict()
+    _data = dict()
     urls = dict(us = base_url+'/api/v1/us/daily.csv',
                 states = base_url+'/api/v1/states/daily.csv',
                 states_metadata = base_url+"/api/v1/states/info.csv"
@@ -966,7 +693,16 @@ class CovidTrackingProject(BaselineData):
                   
                   
                   }
-
+    columns_us = dict(
+        good = ['dateChecked','death', 'hash', 'hospitalizedCumulative', 
+                'hospitalizedCurrently','inIcuCumulative', 'inIcuCurrently',
+                'negative', 'onVentilatorCumulative', 'onVentilatorCurrently',
+                'pending','positive','recovered','states'], 
+        
+        deprecated = ['hospitalized', 'lastModified', 'total', 
+             'totalTestResults', 'posNeg', 'deathIncrease',
+            'hospitalizedIncrease', 'negativeIncrease', 'positiveIncrease', 
+            'totalTestResultsIncrease'])
         
     
     def get_csv_save_load(self,url, fpath,read_kws={'parse_dates':['date']}):
@@ -1016,9 +752,10 @@ class CovidTrackingProject(BaselineData):
         data = self.get_csv_save_load(url,fpath=self.base_folder+key+'.csv',
                                       read_kws=read_kws)
         ## Save to data dictionary
-        self.data[key] = data.copy()
+        self._data[key] = data.copy()
         
-        setattr(self,key.upper(),data)
+        key_to_save = f"df_{key}"
+        setattr(self,key_to_save,data)
 
         return data
     
