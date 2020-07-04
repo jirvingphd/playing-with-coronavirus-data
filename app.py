@@ -26,6 +26,7 @@ from dash.dependencies import Input, Output
 ## Load Functions and Data
 from functions import *#CoronaData,plot_states,get_state_ts
 
+## LOAD DATA AND SAVE DFs
 corona_data = CoronaData(verbose=False,run_workflow=True)
 df = corona_data.df_us.copy()
 df_world = corona_data.df.copy()
@@ -55,7 +56,13 @@ stat_cols = ['Confirmed','Deaths','Recovered']
 plot_cols = []
 for column in stat_cols:
     plot_cols.extend([col for col in df.columns if column in col])
+    
+## Columns for the world
+plot_cols_world=[]
+for column in stat_cols:
+    plot_cols.extend([col for col in df_world.columns if column in col])
 
+## Make Case-Type Options
 new_options = [{'label':'New Cases Only','value':1},
 {'label':'Cumulative Cases','value':0}]
 
@@ -113,7 +120,7 @@ app.layout = html.Div(id='outerbox',children=[
                                     dcc.Dropdown(id='choose_cases-world',className='case_menu_class',
                                                  multi=False,
                                                 placeholder='Select Case Type', 
-                                                options=make_options(plot_cols),
+                                                options=make_options(plot_cols_world),
                                                 value='Confirmed'),#]),
                         dcc.Dropdown(id='choose_countries',className='case_menu_class',
                                     multi=True,
@@ -152,7 +159,7 @@ def update_output_div(countries,cases,new_only):
         
     pfig=plot_group_ts(df_world,group_list=countries,plot_cols=cases,
                        group_col='Country/Region',
-                     new_only=new_only,plot_scatter=False,width=900,height=600)
+                     new_only=new_only,plot_scatter=True,width=900,height=600)
 
     # pfig = plot_states(df,countries,plot_cols=cases,new_only=new_only)
     return pfig
