@@ -140,7 +140,7 @@ murmurhash==1.0.2
 nbconvert==5.5.0
 nbformat==4.4.0
 networkx==2.4
-nltk==3.4.5
+# nltk==3.4.5
 notebook==5.7.8
 numba==0.49.1
 numpy==1.18.4
@@ -199,7 +199,7 @@ pytest==3.7.0
 python-dateutil==2.8.0
 python-slugify==4.0.0
 pytz==2019.2
-PyWavelets==1.1.1
+# PyWavelets==1.1.1
 PyYAML==5.3.1
 pyzmq==18.1.0
 QtAwesome==0.7.0
@@ -228,14 +228,14 @@ smart-open==1.8.4
 snowballstemmer==2.0.0
 soupsieve==1.9.2
 # spacy==2.3.0
-Sphinx==3.0.4
-sphinxcontrib-applehelp==1.0.2
-sphinxcontrib-devhelp==1.0.2
-sphinxcontrib-htmlhelp==1.0.3
-sphinxcontrib-jsmath==1.0.1
-sphinxcontrib-qthelp==1.0.3
-sphinxcontrib-serializinghtml==1.1.4
-sphinxcontrib-websupport==1.2.2
+# Sphinx==3.0.4
+# sphinxcontrib-applehelp==1.0.2
+# sphinxcontrib-devhelp==1.0.2
+# sphinxcontrib-htmlhelp==1.0.3
+# sphinxcontrib-jsmath==1.0.1
+# sphinxcontrib-qthelp==1.0.3
+# sphinxcontrib-serializinghtml==1.1.4
+# sphinxcontrib-websupport==1.2.2
 # spyder==3.3.6
 # spyder-kernels==0.5.2
 SQLAlchemy==1.3.8
