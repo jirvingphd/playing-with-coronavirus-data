@@ -109,7 +109,7 @@ app.layout = html.Div(id='outerbox',children=[
                                 children=[
                                     dcc.RadioItems(id='choose_new-world',className='case_menu_class',
                                                     options=new_options,
-                                                    value=0),
+                                                    value=1),
                                     dcc.Dropdown(id='choose_cases-world',className='case_menu_class',
                                                  multi=False,
                                                 placeholder='Select Case Type', 
