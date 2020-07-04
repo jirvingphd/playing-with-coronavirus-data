@@ -22,7 +22,7 @@ def make_options(menu_choices):
     return options
 
 # @add_method(CoronaData)
-def download_coronavirus_data(path='New Data/',verbose=False):
+def download_coronavirus_data(path='New\ Data/',verbose=False):
     """Installs the Kaggle Command Line Interface to clone dataset.
     Then extracts dataset to specified path and displays name of main file.
     Args:
@@ -38,26 +38,26 @@ def download_coronavirus_data(path='New Data/',verbose=False):
     os.makedirs(path, exist_ok=True)
 
     ## Install Kaggle
-
     try:
-        os.system("pip install kaggle --upgrade")
-        # clear_output()
+        import kaggle.api as kaggle
     except:
-        print(" ERROR WITH KAGGLE PIP INSTALL")
-    
-    ## Run Kaggle Command 
-    cmd = 'kaggle datasets download -d sudalairajkumar/novel-corona-virus-2019-dataset'
-    os.system(cmd)
-    
-    ## Extract ZipFile
-    print(f'Downloaded dataset Zipfie, extracting to {path}...')
-    zip_filepath = 'novel-corona-virus-2019-dataset.zip'
-    with ZipFile(zip_filepath) as file:
-        file.extractall(path)
-    
-    ## Delete Zip File
-    os.system(f"rm {zip_filepath}"  )
-    
+        ## Install Kaggle 
+        os.system("pip install kaggle --upgrade")#
+        clear_output()
+        if verbose: print('\t- Installed kaggle command line tool.')
+
+
+    ## Using the kaggle.api          
+    import kaggle.api as kaggle     
+    kaggle.authenticate()
+    kaggle.dataset_download_files('sudalairajkumar/novel-corona-virus-2019-dataset',
+                            path=path,force=True,unzip=True)                                  
+    # ## Delete Zip File
+    # zipfile  = path+"novel-corona-virus-2019-dataset.zip"
+    # try:
+    #     os.system(f"rm {zipfile}"  )
+    # except:
+    #     print("ERROR DELETING ZIP FILE")
     
     ## Get list of all csvs
     print('[i] Extraction Complete.')    
@@ -72,6 +72,8 @@ def download_coronavirus_data(path='New Data/',verbose=False):
 
 
 import pandas as pd
+
+
 
 #Make a base class
 class BaselineData(object):
