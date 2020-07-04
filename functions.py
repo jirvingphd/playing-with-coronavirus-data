@@ -685,15 +685,15 @@ class CovidTrackingProject(BaselineData):
                )
     
     ## Store good vs deprecated columns
-    columns = {'good':[
+    columns = {'good':['state','fips',
             'positive','negative','death','recovered',
             'hospitalizedCurrently','hospitalizedCumulative',
             'inIcuCurrently','inIcuCumulative',
             'onVentilatorCurrently','onVentilatorCumulative',
-            "state", "pending", "dataQualityGrade", 
+             "pending", "dataQualityGrade", 
             "lastUpdateEt", "totalTestsViral", 
             "positiveTestsViral", "negativeTestsViral", 
-            "positiveCasesViral", "fips", "positiveIncrease", 
+            "positiveCasesViral", "positiveIncrease", 
             "totalTestResults", "totalTestResultsIncrease", 
             "deathIncrease", "hospitalizedIncrease"],
                   
@@ -789,3 +789,151 @@ class CovidTrackingProject(BaselineData):
         print("\thttps://covidtracking.com/api")
     
     
+    
+def set_datetime_index(df_,col='Date',drop=True):#,drop_old=False):
+        """Returns df copy with specified column as datetime index"""
+        import pandas as pd
+            
+        ## Copy to avoid edits to orig
+        df = df_.copy()
+        
+        ## Convert to date time
+        df[col] = pd.to_datetime(df[col],infer_datetime_format=True)
+        
+        ## Set as index
+        df.set_index(df[col],drop=False,inplace=True)
+        
+        if drop:
+            # Drop the column if it is present
+            if col in df.columns:
+                df.drop(columns=col,inplace=True)
+            
+        return df
+    
+    
+    
+def set_freq_resample(df,date_col='Date',freq='D', agg_func='sum'):
+    """Resamples the dataframe with Freq and agg_func. If index is not
+    a datetime axis, will call set_datetime_index. 
+    Helper function for get_group_ts """
+    ## Make index datetime if it is not already. 
+    if isinstance(df.index,pd.DatetimeIndex)==False:
+        df = set_datetime_index(df,col=date_col)
+        
+    ts  = df.resample(freq).agg(agg_func).copy()
+    return ts
+    
+    
+    
+def get_group_ts(df,group_name,group_col='state',
+                     ts_col=None, freq='D', agg_func='sum'):
+        """Take df_us and extracts state's data as then Freq/Aggregation provided"""
+        from IPython.display import display
+        try:
+            ## Get state_df group
+            group_df = df.groupby(group_col).get_group(group_name).copy()
+            
+        except Exception:
+            print("[!] ERROR!")
+#             display(df.head())
+            return None
+        
+        ## Resample and aggregate state data
+        group_df = set_freq_resample(group_df,freq=freq,agg_func=agg_func)
+#         group_df = group_df.resample(freq).agg(agg_func)
+
+
+        ## Get and Rename Sum Cols 
+        orig_cols = group_df.columns
+
+        ## Create Renamed Sum columns
+        for col in orig_cols:
+            # Group - Column 
+            group_df[f"{group_name} - {col}"] = group_df[col]
+
+        ## Drop original cols
+        group_df.drop(orig_cols,axis=1,inplace=True)
+
+        ## Return on columns containing ts_cols
+        if ts_col is not None:
+            ts_cols_selected = [col for col in group_df.columns if ts_col in col]
+            group_df = group_df[ts_cols_selected]
+
+        return group_df 
+    
+    
+    
+def plot_group_ts(df, group_list,group_col, plot_cols = ['Confirmed'],
+                df_only=False,
+                new_only=False,plot_scatter=True,show=False,
+                 width=1000,height=700):
+    """Plots all columns conatining the words in plot_cols for every group in group_list.
+    Returns plotly figure
+    New as of 06/21"""
+    import pandas as pd 
+    import numpy as np
+    
+    ## Get state dataframes
+    concat_dfs = []  
+    GROUPS = {}
+    
+    ## Get each state
+    for group in group_list:
+
+        # Grab each state's df and save to STATES
+        dfs = get_group_ts(df,group,group_col)
+        GROUPS[group] = dfs
+
+        ## for each plot_cols, find all columns that contain that col name
+        for plot_col in plot_cols:
+            concat_dfs.append(dfs[[col for col in dfs.columns if col.endswith(plot_col)]])
+
+    ## Concatenate final dfs
+    plot_df = pd.concat(concat_dfs,axis=1)
+    
+    
+    ## Set title and df if new_only
+    if new_only:
+        plot_df = plot_df.diff()
+        title = f"New Coronavirus Cases by {group_col}"
+    else:
+        title = f'Cumulative Coronavirus Cases by {group_col}'
+    
+    ## Reset Indes
+    plot_df.reset_index(inplace=True)
+  
+    ## Return Df or plot
+    if df_only:
+         return plot_df#.reset_index()
+    
+    else:
+        ## If any columns are per capita, change titleß
+        if np.any(['per capita' in x.lower() for x in plot_cols]):
+            value_name = "# of Cases - Per Capita"
+        else:
+            value_name='# of Cases'
+            
+            
+        ## Melt Data for plotting
+        pfig_df_melt = plot_df.melt(id_vars=['Date'],var_name='Group',
+                                    value_name=value_name)
+        
+        ## Set plotting function
+        if plot_scatter:
+            plot_func = px.scatter
+        else:
+            plot_func = px.line
+    
+        # Plot concatenated dfs
+        pfig = plot_func(pfig_df_melt,x='Date',y=value_name,color='Group',
+                      title=title,template='plotly_dark',width=width,height=height)     
+        
+        ## Add range slider
+        pfig.update_xaxes(rangeslider_visible=True)
+        
+        ## Display?
+        if show:
+            pfig.show()
+                
+        return pfig
+           

@@ -1,24 +1,48 @@
 *:not(#svg-container,#graph){
     font-family:serif;
-    background-color: black;
+    background-color:#111111;
     color:gray;
-    margin:auto;
+    /* margin:auto; */
+}
+
+#world-section{
+    padding:2rem;
+    border-top:5px solid whitesmoke;
+
+}
+
+h1{
+    color:white;
+    text-align: center;
+    margin: auto;
+    font-size: 3em;
+    border-bottom:5px solid whitesmoke;
+
+    padding:1.5rem;
+    width:80%;
+    display: block;
 }
 
 #graph {
     width:90%;
-    display:block;
+    display:flexbox;
     margin: auto;
+    padding-left: 10%;
     /* font-family: serif; */
     /* border:2px solid darkred; */
 
 }
 
-
+#map{
+    display:block;
+    width:90%;
+    margin:auto;
+    height:200%;
+}
 #outerbox{
     margin: auto;
     display:block;
-    background-color: black;
+    background-color: #111111;
     color:white;
     font-family:serif;
     font-weight: bold;
@@ -26,15 +50,16 @@
     border:10px solid darkred;
 
 }
+
 /* *:not(#graph){
     margin:auto; 
     font-family:serif;
-    background-color:black;
+    background-color:#111111;
     color:white;
 } */
 
 .Select-control{
-    background-color: black;
+    background-color: #111111;
     border:1px solid lightskyblue;
     display: block;
 }
@@ -45,20 +70,11 @@
 
 #react-select-2--value-item{
     color:white;
-    background-color: black;
+    background-color: #111111;
 }
 
 
 
-h1{
-    color:white;
-    text-align: center;
-    margin: auto;
-    font-size: 3em;
-    /* border:2px solid  yellow; */
-    padding:1.3rem;
-    display: block;
-}
 
 h2{
     margin-left:20px;
@@ -67,13 +83,13 @@ h2{
 }
 
 #dash-app-content{
-    background-color: black;
+    background-color: #111111;
     color:white;
 }
 
 #app{
     font-weight:70%;
-    background-color: black;
+    background-color: #111111;
     /* border:10px solid darkred; */
     padding:3px;
     /* display:block; */
@@ -81,11 +97,19 @@ h2{
     margin:auto;
 }
 
-
+#app-world{
+    font-weight:70%;
+    background-color: #111111;
+    /* border:10px solid darkred; */
+    padding:3px;
+    /* display:block; */
+    width:90%;
+    margin:auto;
+}
 
 #menu{
     display:box;
-    background-color: black;
+    background-color: #111111;
     color:white;
     /* border:3px solid darkred; */
     width:90%;
@@ -94,7 +118,7 @@ h2{
 
 }
 
-#case_type_menu {
+#case_type_menu,#menu-world {
     display:box;
     margin:20px;
     padding:20px;
@@ -102,7 +126,7 @@ h2{
 
     padding-bottom:3px;
 }
-#choose_cases{
+#choose_cases,#choose-cases-world{
     /* margin:auto; */
     /* padding:10px; */
     vertical-align: middle;
@@ -111,7 +135,7 @@ h2{
 }
 
 
-#choose_new{
+#choose_new,#choose-new-world{
     display: inline-block;
     /* border: 1px solid lightskyblue; */
     /* margin:auto; */
@@ -121,24 +145,15 @@ h2{
 }
 
 .dash-dropdown{
-    background-color: black;
+    background-color: #111111;
     color:gray;
 }
 
-#choose_states{
+#choose_states,#choose-countries{
     width:90%;
     padding-top:20px;
     display: block;
     color:gray;
-    background-color: black;
-}
-
-#graph {
-    width:90%;
-    display:inline-block;
-    margin: auto;
-    /* font-family: serif; */
-    border:2px solid darkred;
-
+    background-color: #111111;
 }
 

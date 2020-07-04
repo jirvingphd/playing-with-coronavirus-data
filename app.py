@@ -28,8 +28,18 @@ from functions import *#CoronaData,plot_states,get_state_ts
 
 corona_data = CoronaData(verbose=False,run_workflow=True)
 df = corona_data.df_us.copy()
+df_world = corona_data.df.copy()
 
 
+## Map of total cases by state
+max_corona = df.groupby('state').max().reset_index()
+color_column = 'Confirmed'
+map = px.choropleth(max_corona,color=color_column,locations='state',
+              hover_data=['Confirmed','Deaths','Recovered'], 
+              hover_name='state',
+              locationmode="USA-states", scope='usa',
+              title=f"Total {color_column} Cases by State",
+              color_continuous_scale=px.colors.sequential.Reds)
 
 
 
@@ -61,29 +71,57 @@ server = app.server
 
 app.layout = html.Div(id='outerbox',children=[
     html.H1("Coronavirus Cases - By State"),
-           
+        dcc.Graph(id='map',figure=map),         
+        
+        ## State App
         html.Div(id='app',
         children=[
             html.Div(id="menu",
                     children=[
                         html.H2("Select Case Types and States"),
 
-                        html.Div(id='case_type_menu', 
+                        html.Div(id='case_type_menu', className='case_menu_class',
                                 children=[
-                                    dcc.RadioItems(id='choose_new',
+                                    dcc.RadioItems(id='choose_new',className='case_menu_class',
                                                     options=new_options,
                                                     value=0),
-                                    dcc.Dropdown(id='choose_cases',multi=False,
+                                    dcc.Dropdown(id='choose_cases',multi=False,className='case_menu_class',
                                                 placeholder='Select Case Type', 
                                                 options=make_options(plot_cols),
                                                 value='Confirmed'),#]),
-                        dcc.Dropdown(id='choose_states',
+                        dcc.Dropdown(id='choose_states',className='case_menu_class',
                                     multi=True,
                                     placeholder='Select States', 
                                     options= make_options(df['state'].sort_values().unique( )),
                                     value=['MD','NY','TX','CA','AZ'])])
                     ]),
             dcc.Graph(id='graph')
+        ]),
+        html.H1("Total Coronavirus Cases - By Country",id='world-section'),
+
+        html.Div(id='app-world',
+        children=[
+            html.Div(id="menu-world",className='case_menu_class',
+                    children=[
+                        html.H2("Select Case Types and Countries"),
+
+                        html.Div(id='case_type_menu-world', className='case_menu_class',
+                                children=[
+                                    dcc.RadioItems(id='choose_new-world',className='case_menu_class',
+                                                    options=new_options,
+                                                    value=0),
+                                    dcc.Dropdown(id='choose_cases-world',className='case_menu_class',
+                                                 multi=False,
+                                                placeholder='Select Case Type', 
+                                                options=make_options(plot_cols),
+                                                value='Confirmed'),#]),
+                        dcc.Dropdown(id='choose_countries',className='case_menu_class',
+                                    multi=True,
+                                    placeholder='Select Countries', 
+                                    options= make_options(df_world['Country/Region'].sort_values().unique( )),
+                                    value=['US','Italy','France','Canada','Mainland China'])])
+                    ]),
+            dcc.Graph(id='graph-world')
         ])
         
         ])
@@ -99,6 +137,24 @@ def update_output_div(states,cases,new_only):
         cases = [cases]
 
     pfig = plot_states(df,states,plot_cols=cases,new_only=new_only)
+    return pfig
+
+
+## world callback
+@app.callback(Output('graph-world','figure'),[Input('choose_countries','value'),
+                                       Input('choose_cases-world','value'),
+                                       Input('choose_new-world','value')])
+def update_output_div(countries,cases,new_only):
+    if isinstance(countries,list)==False:
+        countries = [countries]
+    if isinstance(cases,list)==False:
+        cases = [cases]
+        
+    pfig=plot_group_ts(df_world,group_list=countries,plot_cols=cases,
+                       group_col='Country/Region',
+                     new_only=new_only,plot_scatter=False,width=900,height=600)
+
+    # pfig = plot_states(df,countries,plot_cols=cases,new_only=new_only)
     return pfig
 
 
