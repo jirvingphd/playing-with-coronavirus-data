@@ -1,5 +1,6 @@
 fsds
-urllib3>=1.21.1
+urllib3<1.25
+kaggle
 
 requests
 psycopg2-binary
@@ -9,4 +10,3 @@ django-heroku
 dash
 plotly
 cufflinks
-kaggle
