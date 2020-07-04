@@ -708,10 +708,11 @@ class CovidTrackingProject(BaselineData):
                   
                   }
     columns_us = dict(
-        good = ['dateChecked','death', 'hash', 'hospitalizedCumulative', 
-                'hospitalizedCurrently','inIcuCumulative', 'inIcuCurrently',
-                'negative', 'onVentilatorCumulative', 'onVentilatorCurrently',
-                'pending','positive','recovered','states'], 
+        good = ['positive','negative','death','recovered','hospitalizedCurrently',
+                 'hospitalizedCumulative',
+                'inIcuCurrently', 'inIcuCumulative', 
+                'onVentilatorCurrently','onVentilatorCumulative', 
+                'states','pending','dateChecked', 'hash',], 
         
         deprecated = ['hospitalized', 'lastModified', 'total', 
              'totalTestResults', 'posNeg', 'deathIncrease',
@@ -765,8 +766,17 @@ class CovidTrackingProject(BaselineData):
         ## Get and load csv
         data = self.get_csv_save_load(url,fpath=self.base_folder+key+'.csv',
                                       read_kws=read_kws)
+        
         ## Save to data dictionary
         self._data[key] = data.copy()
+        
+        ## Remove dep cols before saving attr:
+        if key=='us':
+            good_cols = self.columns_us['good']
+        else: 
+            good_cols = self.columns['good']
+            
+        data = data[good_cols].copy()
         
         key_to_save = f"df_{key}"
         setattr(self,key_to_save,data)
