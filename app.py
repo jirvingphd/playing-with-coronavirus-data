@@ -24,7 +24,7 @@ from dash.dependencies import Input, Output
 
 
 ## Load Functions and Data
-from functions import CoronaData,plot_states,get_state_ts
+from functions import *#CoronaData,plot_states,get_state_ts
 
 corona_data = CoronaData(verbose=False,run_workflow=True)
 df = corona_data.df_us.copy()
@@ -53,57 +53,10 @@ new_options = [{'label':'New Cases Only','value':1},
 
 # Build App
 # app = JupyterDash()
-app = dash.Dash()
+app = dash.Dash(__name__)
 server = app.server
 
-# app.layout = html.Div([
-#     html.H1("Coronavirus Analysis"),
-#     html.Div([
-#     html.Div(id="menu",children=[        
-#             dcc.Dropdown(id='choose_states',multi=True,placeholder='Select States',
-#                         options= make_options(df['state'].sort_values().unique( )),
-#                         value=['MD','NY','TX','CA','AZ'],style={'width':'90%','display':'block'}),
-            
-#             html.Div(id='case_type_menu',children=[
-#                 dcc.Dropdown(id='choose_cases',multi=False,
-#                             placeholder='Select Case Type', 
-#                             options=make_options(plot_cols),
-#                             value='Confirmed', 
-#                             style={'width':'80%','display':'inline-block'}
-#                             ),
-            
-            
-#             dcc.RadioItems(id='choose_new',#multi=False,
-#                         options=new_options, value=0,#make_options(['True','False']),
-#                         style={'display':'inline-block'}
-#                         )], 
-#             style={'display':'inline-block','padding-top':'2em'})
-#         ],
-#         style={'border':"1px solid gray",
-#         "display":"block-inline","width":'90%'
-#         })
-# ,
-        
-#     dcc.Graph(id='graph')
-#     ], )],
-#         style={'width':'100%','display':'block','margin-left':'auto',
-#         "border":"2px solid black"})
-#     #"display":'block'})border":"2px solid blue",
 
-# @app.callback(Output('graph','figure'),[Input('choose_states','value'),
-#                                        Input('choose_cases','value'),
-#                                        Input('choose_new','value')])
-# def update_output_div(states,cases,new_only):
-#     if isinstance(states,list)==False:
-#         states = [states]
-#     if isinstance(cases,list)==False:
-#         cases = [cases]
-# #     if new_only=='True':
-# #         new_only=True
-# #     else:
-# #         new_only=False
-#     pfig = plot_states(df,states,plot_cols=cases,new_only=new_only)
-#     return pfig
 
 
 app.layout = html.Div(id='outerbox',children=[
@@ -149,7 +102,10 @@ def update_output_div(states,cases,new_only):
     return pfig
 
 
-# if __name__=='main':
-app.run_server(debug=True)
+FLASK_APP=app
 
-# # FLASK_APP=app
+# if __name__=='main':
+# app.run_server(debug=True)
+if __name__ == '__main__':
+    app.run_server(debug=True)
+    
