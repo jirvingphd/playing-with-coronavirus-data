@@ -426,11 +426,11 @@ class CoronaData(BaselineData):
         if self.__verbose:
             print(f'\t- Downloaded dataset .zip and extracted to:"{path}"')
      
-        ## Delete Zip File
-        try:
-            os.system(f"rm {path}novel-corona-virus-2019-dataset.zip"  )
-        except:
-            print("ERROR DELETING ZIP FILE")
+        # ## Delete Zip File
+        # try:
+        #     os.system(f"rm {path}novel-corona-virus-2019-dataset.zip"  )
+        # except:
+        #     print("ERROR DELETING ZIP FILE")
             
         self.get_data_fpath(path)
 
