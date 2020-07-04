@@ -1,0 +1,12 @@
+fsds
+urllib3<1.25
+kaggle
+
+requests
+psycopg2-binary
+django
+gunicorn
+django-heroku
+dash
+plotly
+cufflinks
