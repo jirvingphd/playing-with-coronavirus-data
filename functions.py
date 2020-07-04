@@ -342,11 +342,13 @@ class CoronaData(BaselineData):
             download (bool, optional): [description]. Defaults to True.
             verbose (bool, optional): [description]. Defaults to True.
         """
+        import os
         
         ## Save params for later
         self.__download = download
         self.__verbose = verbose
         self._data_folder = data_dir
+        os.makedirs(data_dir,exist_ok=True)
         
         ## Download data or set local filepath
         if download:
@@ -396,27 +398,37 @@ class CoronaData(BaselineData):
         os.makedirs(path, exist_ok=True)
 
         try:
-            import kaggle
+            import kaggle.api as kaggle
         except:
             ## Install Kaggle 
             os.system("pip install kaggle --upgrade")#
             clear_output()
             if verbose: print('\t- Installed kaggle command line tool.')
 
-        ## Run Kaggle Command 
-        cmd = 'kaggle datasets download -d sudalairajkumar/novel-corona-virus-2019-dataset'
-        os.system(cmd)
 
-        ## Extract ZipFile
-        zip_filepath = 'novel-corona-virus-2019-dataset.zip'
-        with ZipFile(zip_filepath) as file:
-            file.extractall(path)
+        ## Using the kaggle.api          
+        import kaggle.api as kaggle     
+        kaggle.authenticate()
+        kaggle.dataset_download_files('sudalairajkumar/novel-corona-virus-2019-dataset',
+                             path=path,force=True,unzip=True)
+        
+        ## Run Kaggle Command 
+        # cmd = 'kaggle datasets download -d sudalairajkumar/novel-corona-virus-2019-dataset'
+        # os.system(cmd)
+
+        # ## Extract ZipFile
+        # zip_filepath = 'novel-corona-virus-2019-dataset.zip'
+        # with ZipFile(zip_filepath) as file:
+        #     file.extractall(path)
             
         if self.__verbose:
             print(f'\t- Downloaded dataset .zip and extracted to:"{path}"')
      
         ## Delete Zip File
-        os.system(f"rm {zip_filepath}"  )
+        try:
+            os.system(f"rm {path}novel-corona-virus-2019-dataset.zip"  )
+        except:
+            print("ERROR DELETING ZIP FILE")
             
         self.get_data_fpath(path)
 
