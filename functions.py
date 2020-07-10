@@ -719,7 +719,42 @@ class CovidTrackingProject(BaselineData):
             'hospitalizedIncrease', 'negativeIncrease', 'positiveIncrease', 
             'totalTestResultsIncrease'])
         
+    def get_df(self,which='states',remove_dep_cols=True):
+        """
+        Method for retrieving either df_states or df_us (default=df_states) with
+        deprecated columns removed by default. 
+
+        Args:
+            which (str, optional): Which df to return: 'us' or 'states'. Defaults to 'states'.
+
+            remove_dep_cols (bool, optional): Remove deprecated columns. Defaults to True.
+
+        Returns:
+            DataFrame: states or US dataframe 
+
+        """
+        
+        ## Select the correct df
+        if which=='states':
+            df = self.df_states.copy()
+            col_dict = self.columns
+        elif which=='us':
+            df= self.df_us.copy()
+            col_dict = self.columns_us
+        else:
+            raise Exception('The value for "which" must be either "us" or "states"')
+
+        ## Remove deprecated columns
+        if remove_dep_cols:
+            df = df[col_dict['good']].copy()
+            
+        return df
     
+    
+
+    
+    
+            
     def get_csv_save_load(self,url, fpath,read_kws={'parse_dates':['date']}):
         import pandas as pd
         import requests

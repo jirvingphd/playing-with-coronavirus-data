@@ -70,7 +70,8 @@ new_options = [{'label':'New Cases Only','value':1},
 
 # Build App
 # app = JupyterDash()
-app = dash.Dash(__name__)
+from jupyter_dash import JupyterDash
+all=JuptyterDash()
 server = app.server
 
 
