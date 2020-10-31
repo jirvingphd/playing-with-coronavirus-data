@@ -2,7 +2,7 @@
     font-family:serif;
     background-color:#111111;
     color:gray;
-    /* margin:auto; */
+
 }
 
 #world-section{
@@ -11,7 +11,15 @@
 
 }
 
+
 h1{
+    border-bottom: 2px dashed green;
+    display:block;
+    width:80%;
+    text-align: center;
+    padding:1.2em;
+}
+/* h1{
     color:white;
     text-align: center;
     margin: auto;
@@ -21,15 +29,14 @@ h1{
     padding:1.5rem;
     width:80%;
     display: block;
-}
+} */
 
 #graph {
     width:90%;
     display:flexbox;
     margin: auto;
     padding-left: 10%;
-    /* font-family: serif; */
-    /* border:2px solid darkred; */
+
 
 }
 
@@ -51,13 +58,6 @@ h1{
 
 }
 
-/* *:not(#graph){
-    margin:auto; 
-    font-family:serif;
-    background-color:#111111;
-    color:white;
-} */
-
 .Select-control{
     background-color: #111111;
     border:1px solid lightskyblue;
@@ -75,7 +75,6 @@ h1{
 
 
 
-
 h2{
     margin-left:20px;
     color:white;
@@ -90,9 +89,7 @@ h2{
 #app{
     font-weight:70%;
     background-color: #111111;
-    /* border:10px solid darkred; */
     padding:3px;
-    /* display:block; */
     width:90%;
     margin:auto;
 }
@@ -100,9 +97,7 @@ h2{
 #app-world{
     font-weight:70%;
     background-color: #111111;
-    /* border:10px solid darkred; */
     padding:3px;
-    /* display:block; */
     width:90%;
     margin:auto;
 }
@@ -111,7 +106,6 @@ h2{
     display:box;
     background-color: #111111;
     color:white;
-    /* border:3px solid darkred; */
     width:90%;
     padding:10px;
     margin: auto;
@@ -127,8 +121,7 @@ h2{
     padding-bottom:3px;
 }
 #choose_cases,#choose-cases-world{
-    /* margin:auto; */
-    /* padding:10px; */
+
     vertical-align: middle;
     display: inline-block;
     width:49%;
@@ -137,10 +130,7 @@ h2{
 
 #choose_new,#choose-new-world{
     display: inline-block;
-    /* border: 1px solid lightskyblue; */
-    /* margin:auto; */
     text-align:left;
-    /* padding:10px; */
     width:49%;
 }
 
