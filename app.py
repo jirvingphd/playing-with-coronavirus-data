@@ -5,16 +5,19 @@
 #     os.system("conda install -c conda-forge -c plotly jupyter-dash")
 #     from jupyter_dash import JupyterDash
 
+# pip install plotly_express
 ## PLOTLY IMPORTS/PARAMS
-import plotly.express as px
+# import plotly.express as px
+from plotly import express as px
+
 import plotly.graph_objects as go
 import plotly.io as pio
 pio.templates.default = "plotly_dark"
 
 ## Acitvating Cufflinks
-import cufflinks as cf
-cf.go_offline()
-cf.set_config_file(sharing='public',theme='solar',offline=True)
+# import cufflinks as cf
+# cf.go_offline()
+# cf.set_config_file(sharing='public',theme='solar',offline=True)
 
 ## Importing Dash
 import dash
@@ -34,12 +37,12 @@ df_world = corona_data.df.copy()
 
 ## Map of total cases by state
 max_corona = df.groupby('state').max().reset_index()
+
 color_column = 'Confirmed'
-map = px.choropleth(max_corona,color=color_column,locations='state',
+map_ = px.choropleth(max_corona,color=color_column,locations='state',
               hover_data=['Confirmed','Deaths','Recovered'], 
               hover_name='state',
-              locationmode="USA-states", scope='usa',
-              title=f"Total {color_column} Cases by State",
+              locationmode="USA-states", scope='usa', title="Total {} Cases by State".format(color_column),
               color_continuous_scale=px.colors.sequential.Reds)
 
 
@@ -78,7 +81,7 @@ server = app.server
 
 app.layout = html.Div(id='outerbox',children=[
     html.H1("Coronavirus Cases - By State"),
-        dcc.Graph(id='map',figure=map),         
+        dcc.Graph(id='map',figure=map_),         
         
         ## State App
         html.Div(id='app',
