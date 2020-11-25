@@ -1,8 +1,9 @@
 from fsds.imports import *
-import os,glob,sys,re
+import os,glob,sys,re,shutil
 
 import plotly.express as px
 import plotly.graph_objects as go
+import pandas as pd
 
 
 import plotly.io as pio
@@ -20,6 +21,42 @@ def make_options(menu_choices):
     for choice in menu_choices:
         options.append({'label':choice,'value':choice})
     return options
+
+
+def load_us_reference_info():
+    """Return and save US Reference Data"""
+    ## Making Master Lookup CSV
+    import pandas as pd
+    abbrev = pd.read_csv('Reference Data/united_states_abbreviations.csv')
+    pop = pd.read_csv('Reference Data/us-pop-est2019-alldata.csv')
+    us_pop = pop.loc[pop['STATE']>0][['NAME','POPESTIMATE2019']].copy()
+    us_info = pd.merge(abbrev,us_pop,right_on='NAME',left_on='State',how="inner")
+    us_info.drop('NAME',axis=1,inplace=True)
+    return us_info
+
+
+def download_world_pop(data_folder = "Reference Data/",load=True):
+    """Downloads world pop zip from kaggle"""
+    import os,sys,shutil
+
+    # Download kaggle dataset
+    os.system('kaggle datasets download -d tanuprabhu/population-by-country-2020')
+
+    ## Specify file and target folder
+    file = 'population-by-country-2020.zip'
+    target = os.path.join(data_folder,file)
+
+    ## Move zip file to target
+    shutil.move(file,target)
+    print(f'File saved to {target}')
+    
+    ## Load csv 
+    if load:
+        df = pd.read_csv(target)
+    else:
+        df = target
+    return df
+
 
 # @add_method(CoronaData)
 def download_coronavirus_data(path='New\ Data/',verbose=False):
@@ -71,7 +108,6 @@ def download_coronavirus_data(path='New\ Data/',verbose=False):
     return main_file[0] #file_list[index]
 
 
-import pandas as pd
 
 
 
@@ -216,12 +252,20 @@ def get_state_ts(df, state_name,
     state_df.drop(orig_cols,axis=1,inplace=True)
     
     
-    ## Select columns from ts_cols
+## Return on columns containing ts_cols
     if ts_col is not None:
-        ts_cols_selected = [col for col in state_df.columns if ts_col in col]
-        state_df = state_df[ts_cols_selected]
 
+        if isinstance(ts_col,str):
+            ts_col = [ts_col]
+
+        
+        ts_cols_selected=[]
+        for column in ts_col:
+            ts_cols_selected.extend([col for col in state_df.columns if column in col])
+            
+        state_df = state_df[ts_cols_selected]
     return state_df
+    
 
 
 
@@ -269,6 +313,8 @@ def plot_states(df, state_list, plot_cols = ['Confirmed'],df_only=False,
             value_name = "# of Cases - Per Capita"
         else:
             value_name='# of Cases'
+
+
         pfig_df_melt = plot_df.melt(id_vars=['Date'],var_name='State',
                                     value_name=value_name)
         
@@ -891,7 +937,15 @@ def get_group_ts(df,group_name,group_col='state',
 
         ## Return on columns containing ts_cols
         if ts_col is not None:
-            ts_cols_selected = [col for col in group_df.columns if ts_col in col]
+
+            if isinstance(ts_col,str):
+                ts_col = [ts_col]
+
+            
+            ts_cols_selected=[]
+            for column in ts_col:
+                ts_cols_selected.extend([col for col in group_df.columns if column in col])
+
             group_df = group_df[ts_cols_selected]
 
         return group_df 
