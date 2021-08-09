@@ -132,3 +132,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 CORD-19-research-challenge.zip
+covid19-data-from-john-hopkins-university.zip
+covid19-us-county-jhu-data-demographics.zip
