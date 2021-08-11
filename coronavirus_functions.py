@@ -1106,22 +1106,22 @@ def plot_acf_pacf(ts,figsize=(9,6),lags=52,suptitle=None,sup_y = 1.01):
     return fig,axes
 
 
-## funtionize diagnosing
-def diagnose_model(model):
-    """Takes a fit statsmodels model and displays the .summary 
-    and plots the built-in plot.diagnostics()"""
-    display(model.summary())
-    model.plot_diagnostics()
-    plt.tight_layout()
+# ## funtionize diagnosing
+# def diagnose_model(model):
+#     """Takes a fit statsmodels model and displays the .summary 
+#     and plots the built-in plot.diagnostics()"""
+#     display(model.summary())
+#     model.plot_diagnostics()
+#     plt.tight_layout()
     
     
-def get_df_from_pred(forecast_or_pred,forecast_label='Forecast'):
-    """Takes a PredictionResultsWrapper from statsmodels
-    extracts the confidence intervals and predicted mean and returns in a df"""
-    forecast_df = forecast_or_pred.conf_int()
-    forecast_df.columns = ['Lower CI','Upper CI']
-    forecast_df[forecast_label] = forecast_or_pred.predicted_mean
-    return forecast_df
+# def get_df_from_pred(forecast_or_pred,forecast_label='Forecast'):
+#     """Takes a PredictionResultsWrapper from statsmodels
+#     extracts the confidence intervals and predicted mean and returns in a df"""
+#     forecast_df = forecast_or_pred.conf_int()
+#     forecast_df.columns = ['Lower CI','Upper CI']
+#     forecast_df[forecast_label] = forecast_or_pred.predicted_mean
+#     return forecast_df
 
 def plot_forecast_from_df(forecast_df,ts_diff=None,orig_label='True Data',
                           forecast_label='Forecast',
