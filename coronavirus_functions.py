@@ -1157,7 +1157,7 @@ def get_forecast(model,steps=12):
     return forecast
 
     
-def plot_forecast(model,ts,last_n_lags=52,future_steps=12):
+def plot_forecast(model,ts,last_n_lags=365,future_steps=12):
     forecast_df = get_forecast(model,steps=future_steps)
 
     fig,ax = plt.subplots(figsize=(12,5))
@@ -1176,19 +1176,19 @@ def plot_forecast(model,ts,last_n_lags=52,future_steps=12):
 #     fig,ax=plot_forecast(model,ts,future_steps=steps,last_n_lags=last_n_lags)
 #     return fig,ax
 
-def evaluate_model(model,ts,test_ts, last_n_lags =,steps=None):
-    diagnose_model(model)
+# def evaluate_model(model,ts,test_ts, last_n_lags =,steps=None):
+#     diagnose_model(model)
     
-    if steps is None:
-        steps=len(test_ts)
+#     if steps is None:
+#         steps=len(test_ts)
     
-    forecast = model.get_forecast(steps=steps)
-    forecast_df = get_df_from_pred(forecast,)
+#     forecast = model.get_forecast(steps=steps)
+#     forecast_df = get_df_from_pred(forecast,)
     
-    fig, ax = plot_forecast_from_df(forecast_df,ts_diff=ts,
-                                    last_n_lags=last_n_lags)
+#     fig, ax = plot_forecast_from_df(forecast_df,ts_diff=ts,
+#                                     last_n_lags=last_n_lags)
     
-    if test_ts is not None:
-        test_ts.plot(ax=ax)
-    return fig,ax
+#     if test_ts is not None:
+#         test_ts.plot(ax=ax)
+#     return fig,ax
            

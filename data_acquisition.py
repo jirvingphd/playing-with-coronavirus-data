@@ -81,7 +81,7 @@ state_to_abbrevs_map = dict(zip(state_abbrevs['State'],state_abbrevs['Abbreviati
 abbrev_to_state_map = dict(zip(state_abbrevs['Abbreviation'],state_abbrevs['State']))
 
 ## Download Kaggle Data
-!kaggle datasets download -d antgoldbloom/covid19-data-from-john-hopkins-university
+os.system("kaggle datasets download -d antgoldbloom/covid19-data-from-john-hopkins-university")
 
 jhu_data_zip = zipfile.ZipFile('covid19-data-from-john-hopkins-university.zip')
 
