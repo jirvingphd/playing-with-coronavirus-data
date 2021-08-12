@@ -1143,7 +1143,7 @@ def plot_forecast_from_df(forecast_df,ts_diff=None,orig_label='True Data',
                     forecast_df['Upper CI'],color='g',alpha=0.3)
     ax.legend()
     ax.set(title=f'Forecasted {ts_diff.name}')
-    return fig,ax\
+    return fig,ax
         
         
         
@@ -1157,17 +1157,17 @@ def get_forecast(model,steps=12):
     return forecast
 
     
-def plot_forecast(model,ts,last_n_lags=365,future_steps=12):
-    forecast_df = get_forecast(model,steps=future_steps)
+# def plot_forecast(model,ts,last_n_lags=365,future_steps=12):
+#     forecast_df = get_forecast(model,steps=future_steps)
 
-    fig,ax = plt.subplots(figsize=(12,5))
-    ts.iloc[-last_n_lags:].plot(label='True Data')
-    forecast_df['Forecast'].plot(ax=ax)
-    ax.fill_between(forecast_df.index,
-                    forecast_df['Lower CI'], forecast_df['Upper CI'],alpha=0.6)
-    ax.legend()
-    ax.set(title=f'Forecasted {ts.name}')
-    return fig,ax
+#     fig,ax = plt.subplots(figsize=(12,5))
+#     ts.iloc[-last_n_lags:].plot(label='True Data')
+#     forecast_df['Forecast'].plot(ax=ax)
+#     ax.fill_between(forecast_df.index,
+#                     forecast_df['Lower CI'], forecast_df['Upper CI'],alpha=0.6)
+#     ax.legend()
+#     ax.set(title=f'Forecasted {ts.name}')
+#     return fig,ax
 
 
 # def evaluate_model(model,ts,last_n_lags =52,steps=12):
