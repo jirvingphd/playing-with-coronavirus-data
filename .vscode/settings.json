@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/opt/anaconda3/envs/learn-env/bin/python",
+    "python.pythonPath": "/Users/codingdojo/opt/anaconda3/envs/learn-env/bin/python",
     "yaml.customTags": [
         "!And",
         "!And sequence",

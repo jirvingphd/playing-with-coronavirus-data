@@ -1,9 +1,9 @@
-*:not(#svg-container,#graph){
+/* *:not(#svg-container,#graph){
     font-family:serif;
     background-color:#111111;
     color:gray;
 
-}
+} */
 
 #world-section{
     padding:2rem;
