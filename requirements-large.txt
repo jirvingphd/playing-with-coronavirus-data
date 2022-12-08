@@ -27,7 +27,7 @@ bump2version==0.5.11
 bz2file==0.98
 cachetools==4.1.0
 catalogue==1.0.0
-certifi==2020.6.20
+certifi==2022.12.7
 cffi==1.12.3
 chardet==3.0.4
 click==7.1.2
